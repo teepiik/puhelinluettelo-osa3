@@ -1,10 +1,12 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const morgan = require('morgan')
+const morgan = require("morgan");
+const cors = require("cors");
 
 app.use(bodyParser.json());
-app.use(morgan('tiny'))
+app.use(morgan("tiny"));
+app.use(cors());
 
 let persons = [
   {
@@ -41,57 +43,56 @@ app.get("/info", (req, res) => {
 });
 
 app.get("/api/persons/:id", (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(p => p.id === id)
-  
-    if (person) {
-      res.json(person)
-    } else {
-      res.status(404).end()
-    }
-  })
+  const id = Number(req.params.id);
+  const person = persons.find(p => p.id === id);
 
-  app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    persons = persons.filter(p => p.id !== id)
-  
-    res.status(204).end()
-  })
-
-  const generateId = () => {
-    return Math.floor(Math.random() * 1000000000000000);
+  if (person) {
+    res.json(person);
+  } else {
+    res.status(404).end();
   }
-  
-  app.post('/api/persons', (request, response) => {
-    const body = request.body
-  
-    if (body.name === undefined) {
-      return response.status(400).json({ error: 'name missing' })
-    }
+});
 
-    if (body.number === undefined) {
-        return response.status(400).json({ error: 'number missing' })
-      }
+app.delete("/api/persons/:id", (req, res) => {
+  const id = Number(req.params.id);
+  persons = persons.filter(p => p.id !== id);
 
-    const personsNames = persons.map(p => p.name)
+  res.status(204).end();
+});
 
-      if (personsNames.includes(body.name)) {
-        return response.status(400).json({ error: 'name is already in use' })
-      }
-  
-    const person = {
-      name: body.name,
-      number: body.number,
-      id: generateId()
-    }
-  
-    persons = persons.concat(person)
-  
-    response.json(person)
-  })
-  
+const generateId = () => {
+  return Math.floor(Math.random() * 1000000000000000);
+};
 
-const PORT = 3001;
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+
+  if (body.name === undefined) {
+    return response.status(400).json({ error: "name missing" });
+  }
+
+  if (body.number === undefined) {
+    return response.status(400).json({ error: "number missing" });
+  }
+
+  const personsNames = persons.map(p => p.name);
+
+  if (personsNames.includes(body.name)) {
+    return response.status(400).json({ error: "name is already in use" });
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId()
+  };
+
+  persons = persons.concat(person);
+
+  response.json(person);
+});
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
