@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.static("build"));
 
 const url =
-  "mongodb://person:pepeson@ds227858.mlab.com:27858/phonebook-fullstack";
+  "mongodb://person:pois@ds227858.mlab.com:27858/phonebook-fullstack";
 
 mongoose.connect(url);
 
