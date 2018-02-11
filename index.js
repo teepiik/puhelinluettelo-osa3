@@ -54,24 +54,18 @@ app.get('/api/persons/:id', (request, response) => {
       response.status(400).send({ error: 'malformatted id' })
     })
 })
-/*
-app.get("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find(p => p.id === id);
 
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
-});*/
 
-app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  persons = persons.filter(p => p.id !== id);
-
-  res.status(204).end();
-});
+app.delete('/api/persons/:id', (request, response) => {
+  Person
+    .findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => {
+      response.status(400).send({ error: 'malformatted id' })
+    })
+})
 
 const generateId = () => {
   return Math.floor(Math.random() * 1000000000000000);
@@ -99,6 +93,25 @@ app.post("/api/persons", (request, response) => {
     response.json(formatPerson(savedPerson));
   });
 });
+
+app.put('/api/persons/:id', (request, response) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person
+    .findByIdAndUpdate(request.params.id, person, { new: true } )
+    .then(updatedPerson => {
+      response.json(formatPerson(updatedPerson))
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })
+})
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
