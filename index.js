@@ -44,7 +44,7 @@ app.get('/api/persons/:id', (request, response) => {
     .findById(request.params.id)
     .then(person => {
       if (person) {
-        response.json(formatNote(person))
+        response.json(formatPerson(person))
       } else {
         response.status(404).end()
       }
