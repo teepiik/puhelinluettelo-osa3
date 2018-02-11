@@ -38,7 +38,7 @@ app.get("/info", (req, res) => {
     <p>${dateNow}</p>`);*/
 
     Person.find({}).then(persons => {
-      response.send(`<p>puhelinluettelossa on ${persons.length} henkilön numero</p>
+      res.send(`<p>puhelinluettelossa on ${persons.length} henkilön numero</p>
       <p>${dateNow}</p>`);
     });
 
