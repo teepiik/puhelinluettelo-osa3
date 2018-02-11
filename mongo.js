@@ -6,6 +6,7 @@ const url =
 
 mongoose.connect(url);
 
+
 const Person = mongoose.model("Person", {
   name: String,
   number: String
@@ -33,3 +34,4 @@ if (typeof process.argv[2] !== "undefined" && process.argv[2] !== null) {
     mongoose.connection.close();
   });
 }
+

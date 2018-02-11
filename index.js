@@ -3,91 +3,91 @@ const app = express();
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
-const mongoose = require('mongoose')
-const Person = require('./models/person')
+const mongoose = require("mongoose");
+const Person = require("./models/person");
 
 app.use(bodyParser.json());
 app.use(morgan("tiny"));
 app.use(cors());
-app.use(express.static('build'))
+app.use(express.static("build"));
 
 const url =
-  "mongodb://person:poistettu@ds227858.mlab.com:27858/phonebook-fullstack";
+  "mongodb://person:pepeson@ds227858.mlab.com:27858/phonebook-fullstack";
 
-const formatPerson = (person) => {
+mongoose.connect(url);
+
+const formatPerson = person => {
   return {
     name: person.name,
     number: person.number,
     id: person._id
-  }
-}
-
-app.get('/api/persons', (request, response) => {
-  Person
-    .find({})
-    .then(persons => {
-      response.json(persons.map(formatPerson))
-    })
-})
-
-app.get("/info", (req, res) => {
-  let amount = persons.length;
-  let dateNow = new Date();
-  res.send(`<p>puhelinluettelossa on ${amount} henkilön numero</p>
-    <p>${dateNow}</p>`);
-});
-
-app.get("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find(p => p.id === id);
-
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
-});
-
-app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  persons = persons.filter(p => p.id !== id);
-
-  res.status(204).end();
-});
-
-const generateId = () => {
-  return Math.floor(Math.random() * 1000000000000000);
-};
-
-app.post("/api/persons", (request, response) => {
-  const body = request.body;
-
-  if (body.name === undefined) {
-    return response.status(400).json({ error: "name missing" });
-  }
-
-  if (body.number === undefined) {
-    return response.status(400).json({ error: "number missing" });
-  }
-
-  const personsNames = persons.map(p => p.name);
-
-  if (personsNames.includes(body.name)) {
-    return response.status(400).json({ error: "name is already in use" });
-  }
-
-  const person = {
-    name: body.name,
-    number: body.number,
-    id: generateId()
   };
 
-  persons = persons.concat(person);
+  app.get("/api/persons", (request, response) => {
+    Person.find({}).then(persons => {
+      response.json(persons.map(formatPerson));
+    });
+  });
 
-  response.json(person);
-});
+  app.get("/info", (req, res) => {
+    let amount = persons.length;
+    let dateNow = new Date();
+    res.send(`<p>puhelinluettelossa on ${amount} henkilön numero</p>
+    <p>${dateNow}</p>`);
+  });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  app.get("/api/persons/:id", (req, res) => {
+    const id = Number(req.params.id);
+    const person = persons.find(p => p.id === id);
+
+    if (person) {
+      res.json(person);
+    } else {
+      res.status(404).end();
+    }
+  });
+
+  app.delete("/api/persons/:id", (req, res) => {
+    const id = Number(req.params.id);
+    persons = persons.filter(p => p.id !== id);
+
+    res.status(204).end();
+  });
+
+  const generateId = () => {
+    return Math.floor(Math.random() * 1000000000000000);
+  };
+
+  app.post("/api/persons", (request, response) => {
+    const body = request.body;
+
+    if (body.name === undefined) {
+      return response.status(400).json({ error: "name missing" });
+    }
+
+    if (body.number === undefined) {
+      return response.status(400).json({ error: "number missing" });
+    }
+
+    const personsNames = persons.map(p => p.name);
+
+    if (personsNames.includes(body.name)) {
+      return response.status(400).json({ error: "name is already in use" });
+    }
+
+    const person = {
+      name: body.name,
+      number: body.number,
+      id: generateId()
+    };
+
+    persons = persons.concat(person);
+
+    response.json(person);
+  });
+
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
