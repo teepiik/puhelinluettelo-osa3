@@ -3,38 +3,32 @@ const app = express();
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
+const mongoose = require('mongoose')
+const Person = require('./models/person')
 
 app.use(bodyParser.json());
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.static('build'))
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1
-  },
-  {
-    name: "Martti Tienari",
-    number: "040-123456",
-    id: 2
-  },
-  {
-    name: "Arto Järvinen",
-    number: "040-123456",
-    id: 3
-  },
-  {
-    name: "Lea Kutvonen",
-    number: "040-123456",
-    id: 4
-  }
-];
+const url =
+  "mongodb://person:testi@ds227858.mlab.com:27858/phonebook-fullstack";
 
-app.get("/api/persons", (req, res) => {
-  res.json(persons);
-});
+const formatPerson = (person) => {
+  return {
+    name: person.name,
+    number: person.number,
+    id: person._id
+  }
+}
+
+app.get('/api/persons', (request, response) => {
+  Person
+    .find({})
+    .then(persons => {
+      response.json(persons.map(formatPerson))
+    })
+})
 
 app.get("/info", (req, res) => {
   let amount = persons.length;
