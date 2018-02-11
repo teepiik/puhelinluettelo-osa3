@@ -32,10 +32,16 @@ app.get("/api/persons", (request, response) => {
 });
 
 app.get("/info", (req, res) => {
-  let amount = persons.length;
+  /*let amount = Person.length
   let dateNow = new Date();
   res.send(`<p>puhelinluettelossa on ${amount} henkilön numero</p>
-    <p>${dateNow}</p>`);
+    <p>${dateNow}</p>`);*/
+
+    Person.find({}).then(persons => {
+      response.send(`<p>puhelinluettelossa on ${persons.length} henkilön numero</p>
+      <p>${dateNow}</p>`);
+    });
+
 });
 
 // show one
