@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 // korvaa url oman tietokantasi urlilla. ethän laita salasanaa Githubiin!
 const url =
-  "mongodb://person:pepeson@ds227858.mlab.com:27858/phonebook-fullstack";
+  "mongodb://person:poistettu@ds227858.mlab.com:27858/phonebook-fullstack";
 
 mongoose.connect(url);
 
