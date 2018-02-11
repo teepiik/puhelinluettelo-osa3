@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.static("build"));
 
 const url =
-  "mongodb://person:pois@ds227858.mlab.com:27858/phonebook-fullstack";
+  "mongodb://person:pepeson@ds227858.mlab.com:27858/phonebook-fullstack";
 
 mongoose.connect(url);
 
@@ -38,6 +38,23 @@ app.get("/info", (req, res) => {
     <p>${dateNow}</p>`);
 });
 
+// show one
+app.get('/api/persons/:id', (request, response) => {
+  Person
+    .findById(request.params.id)
+    .then(person => {
+      if (person) {
+        response.json(formatNote(person))
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })
+})
+/*
 app.get("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   const person = persons.find(p => p.id === id);
@@ -47,7 +64,7 @@ app.get("/api/persons/:id", (req, res) => {
   } else {
     res.status(404).end();
   }
-});
+});*/
 
 app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
