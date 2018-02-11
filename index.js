@@ -73,12 +73,6 @@ const formatPerson = person => {
       return response.status(400).json({ error: "number missing" });
     }
 
-    const personsNames = persons.map(p => p.name);
-
-    if (personsNames.includes(body.name)) {
-      return response.status(400).json({ error: "name is already in use" });
-    }
-
     const person = {
       name: body.name,
       number: body.number,
