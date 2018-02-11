@@ -11,14 +11,5 @@ const Person = mongoose.model("Person", {
   number: String
 });
 
-/* ei toimi
-const format = (person) => {
-    return {
-      name: person.name,
-      number: person.number,
-      id: person._id
-    }
-  }
-*/
 
-module.exports = Person
+module.exports = Person;

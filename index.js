@@ -22,12 +22,16 @@ const formatPerson = person => {
     number: person.number,
     id: person._id
   };
+}
 
-  app.get("/api/persons", (request, response) => {
-    Person.find({}).then(persons => {
-      response.json(persons.map(formatPerson));
-    });
-  });
+  // get all
+  app.get('/api/persons', (request, response) => {
+    Person
+      .find({})
+      .then(persons => {
+        response.json(persons.map(formatPerson))
+      })
+  })
 
   app.get("/info", (req, res) => {
     let amount = persons.length;
@@ -81,13 +85,15 @@ const formatPerson = person => {
       id: generateId()
     };
 
-    persons = persons.concat(person);
-
-    response.json(person);
+    person
+    .save()
+    .then(savedPerson => {
+      response.json(formatPerson(savedPerson))
+    })
   });
 
   const PORT = process.env.PORT || 3001;
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
-};
+
